@@ -40,3 +40,6 @@ function operate(operator, num1, num2){
             console.log("No valid operator given.")
     }
 }
+
+const button = document.getElementById{"button"};
+button.addEventListener("click", () => )
