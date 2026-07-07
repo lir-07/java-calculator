@@ -1,45 +1,134 @@
-function add(a, b){
+function add(a, b) {
     return a + b;
 }
 
-function subtract(a, b){
+function subtract(a, b) {
     return a - b;
 }
 
-function multiply(a, b){
+function multiply(a, b) {
     return a * b;
 }
 
-function divide(a, b){
+function divide(a, b) {
+    if (b === 0) {
+        return "Can't divide by 0!";
+    }
     return a / b;
 }
 
-var operator;
-var number;
-var number2;
-
-function operate(operator, num1, num2){
-    switch (operator){
+function operate(operator, num1, num2) {
+    switch (operator) {
         case "+":
-            add(num1, num2);
-            break;
-
+            return add(num1, num2);
         case "-":
-            subtract(num1, num2);
-            break;
-
+            return subtract(num1, num2);
         case "*":
-            multiply(num1, num2);
-            break;
-
+            return multiply(num1, num2);
         case "/":
-            divide(num1, num2);
-            break;
-        
+            return divide(num1, num2);
         default:
-            console.log("No valid operator given.")
+            return null;
     }
 }
 
-const button = document.getElementById{"button"};
-button.addEventListener("click", () => )
+let number1 = "";
+let number2 = "";
+let operator = "";
+let resultDisplayed = false;
+
+const display = document.querySelector(".display");
+
+const digitButtons = document.querySelectorAll(".digit");
+const operatorButtons = document.querySelectorAll(".operator");
+const equalsButton = document.getElementById("equals");
+const clearButton = document.getElementById("clear");
+
+function updateDisplay(value) {
+    display.textContent = value;
+}
+
+function calculate() {
+    if (number1 === "" || number2 === "" || operator === "") {
+        return;
+    }
+
+    let result = operate(
+        operator,
+        +number1,
+        +number2
+    );
+
+    if (typeof result === "number") {
+        result = Math.round(result * 1000000) / 1000000;
+    }
+
+    updateDisplay(result);
+
+    if (typeof result === "number") {
+        number1 = result.toString();
+    } else {
+        number1 = "";
+    }
+
+    number2 = "";
+    operator = "";
+    resultDisplayed = true;
+}
+
+digitButtons.forEach(button => {
+    button.addEventListener("click", () => {
+
+        const digit = button.textContent;
+
+        if (resultDisplayed && operator === "") {
+            number1 = "";
+            resultDisplayed = false;
+        }
+
+        if (operator === "") {
+
+            if (digit === "." && number1.includes(".")) {
+                return;
+            }
+
+            number1 += digit;
+            updateDisplay(number1);
+
+        } else {
+
+            if (digit === "." && number2.includes(".")) {
+                return;
+            }
+
+            number2 += digit;
+            updateDisplay(number2);
+        }
+    });
+});
+
+operatorButtons.forEach(button => {
+    button.addEventListener("click", () => {
+
+        if (number1 === "") return;
+
+        if (number2 !== "") {
+            calculate();
+        }
+
+        operator = button.textContent;
+        resultDisplayed = false;
+    });
+});
+
+equalsButton.addEventListener("click", () => {
+    calculate();
+});
+
+clearButton.addEventListener("click", () => {
+    number1 = "";
+    number2 = "";
+    operator = "";
+    resultDisplayed = false;
+    updateDisplay("0");
+});
